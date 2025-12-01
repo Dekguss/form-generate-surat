@@ -144,13 +144,11 @@
                 <textarea
                     id="p1">Dalam rangka meramaikan, memeriahkan, serta meningkatkan kreativitas pemuda, kami STT Dwi Dharma Tunggal berencana menyelenggarakan peringatan Hari Ulang Tahun yang akan diisi dengan kegiatan Jalan Santai dan aktivitas lainnya.</textarea>
             </div>
-
             <div class="form-group">
                 <label>Paragraf Isi:</label>
                 <textarea
                     id="p2">Sehubungan dengan hal tersebut, kami memohon perkenan Bapak/Ibu untuk turut berpartisipasi menyukseskan acara ini dengan cara membeli kupon undian (doorprize) Jalan Santai yang telah kami sediakan. Dana yang terkumpul dari penjualan kupon ini nantinya akan digunakan sepenuhnya untuk menunjang kebutuhan operasional kegiatan kami.</textarea>
             </div>
-
             <div class="form-group">
                 <label>Paragraf Penutup:</label>
                 <textarea
@@ -233,10 +231,10 @@
             let bodyY = headerY + headerBlockHeight + 10;
 
             const maxWidth = 170;
-            const indentSpace = "        ";
+            // const indentSpace = "        ";
 
             function writeParagraph(text) {
-                const indentedText = indentSpace + text;
+                const indentedText = "      " + text;
                 doc.text(indentedText, leftMargin, bodyY, { maxWidth: maxWidth, align: "justify", lineHeightFactor: 1.5 });
                 const lines = doc.splitTextToSize(indentedText, maxWidth);
                 bodyY += (lines.length * 6.5) + 4;
