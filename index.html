@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembuatan Surat STT Dwi Dharma Tunggal</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-family: sans-serif;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-family: sans-serif;
+            font-size: 14px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+        }
+
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-family: sans-serif;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        .alert {
+            background: #e2e3e5;
+            color: #383d41;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            font-family: sans-serif;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .col {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <img src="kop.png" id="kopImage" style="display: none;" crossorigin="anonymous">
+    <img src="ttd_sekre.png" id="ttd_sekre" style="display: none;" crossorigin="anonymous">
+    <img src="ttd_ketua.png" id="ttdKetua" style="display: none;" crossorigin="anonymous">
+
+    <div class="container">
+        <h2>Pembuatan Surat STT Dwi Dharma Tunggal</h2>
+
+        <div class="alert">
+            <strong>Info:</strong> Pastikan Nomor Surat, Tanggal Surat, Lampiran, dan Isi Surat sesuai dengan arahan.
+        </div>
+
+        <form id="suratForm">
+            <div class="row">
+                <div class="col form-group">
+                    <label>Nomor Surat:</label>
+                    <input type="text" id="nomor" value="11/STTDDT/X/2025">
+                </div>
+                <div class="col form-group">
+                    <label>Tanggal Surat:</label>   
+                    <input type="text" id="tanggal" value="Senin, 1 Desember 2025">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col form-group">
+                    <label>Lampiran:</label>
+                    <input type="text" id="lampiran" value="-">
+                </div>
+                <div class="col form-group">
+                    <label>Kepada Yth:</label>
+                    <input type="text" id="penerima" placeholder="Contoh: Bapak/Ibu Warga Banjar Tegeh">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Perihal:</label>
+                <textarea id="perihal" style="height: 50px;">Permohonan Partisipasi Pembelian Kupon</textarea>
+            </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+            <div class="form-group">
+                <label>Paragraf Pembuka:</label>
+                <textarea
+                    id="p1">Dalam rangka meramaikan, memeriahkan, serta meningkatkan kreativitas pemuda, kami STT Dwi Dharma Tunggal berencana menyelenggarakan peringatan Hari Ulang Tahun yang akan diisi dengan kegiatan Jalan Santai dan aktivitas lainnya.</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Paragraf Isi:</label>
+                <textarea
+                    id="p2">Sehubungan dengan hal tersebut, kami memohon perkenan Bapak/Ibu untuk turut berpartisipasi menyukseskan acara ini dengan cara membeli kupon undian (doorprize) Jalan Santai yang telah kami sediakan. Dana yang terkumpul dari penjualan kupon ini nantinya akan digunakan sepenuhnya untuk menunjang kebutuhan operasional kegiatan kami.</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Paragraf Penutup:</label>
+                <textarea
+                    id="p3">Demikian permohonan ini kami sampaikan. Atas partisipasi dan perhatian Bapak, kami ucapkan terima kasih yang sebesar-besarnya.</textarea>
+            </div>
+
+            <button type="button" onclick="generatePDF()">Download Surat (PDF)</button>
+        </form>
+    </div>
+
+    <script>
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+
+            // --- 1. PROSES GAMBAR KOP ---
+            const imgElement = document.getElementById('kopImage');
+            let currentY = 50;
+
+            if (imgElement.naturalWidth > 0) {
+                try {
+                    const pdfWidth = 190;
+                    const imgHeight = (imgElement.naturalHeight * pdfWidth) / imgElement.naturalWidth;
+                    doc.addImage(imgElement, 'PNG', 10, 5, pdfWidth, imgHeight);
+                    currentY = 5 + imgHeight + 5;
+                } catch (error) { console.error("Gagal load Kop:", error); }
+            }
+
+            // --- 2. AMBIL DATA DARI INPUT ---
+            const nomor = document.getElementById('nomor').value;
+            const lampiran = document.getElementById('lampiran').value;
+            const perihal = document.getElementById('perihal').value;
+            const tanggal = document.getElementById('tanggal').value;
+            const penerima = document.getElementById('penerima').value;
+            const p1Raw = document.getElementById('p1').value;
+            const p2Raw = document.getElementById('p2').value;
+            const p3Raw = document.getElementById('p3').value;
+
+            doc.setFont("times", "normal");
+            doc.setFontSize(12);
+
+            // --- 3. HEADER SURAT ---
+            doc.text(tanggal, 190, currentY, { align: "right" });
+
+            let headerY = currentY + 10;
+            const leftMargin = 20;
+
+            doc.text("Nomor", leftMargin, headerY);
+            doc.text(":", leftMargin + 23, headerY);
+            doc.text(nomor, leftMargin + 25, headerY);
+
+            doc.text("Lampiran", leftMargin, headerY + 6);
+            doc.text(":", leftMargin + 23, headerY + 6);
+            doc.text(lampiran, leftMargin + 25, headerY + 6);
+
+            doc.text("Perihal", leftMargin, headerY + 12);
+            doc.text(":", leftMargin + 23, headerY + 12);
+
+            const perihalWidth = 75;
+            const splitPerihal = doc.splitTextToSize(perihal, perihalWidth);
+            doc.text(splitPerihal, leftMargin + 25, headerY + 12);
+
+            const rightColumnX = 130;
+            doc.text("Kepada", rightColumnX, headerY);
+            doc.text("Yth.", rightColumnX, headerY + 6);
+
+            doc.setFont("times", "bold");
+            const splitPenerima = doc.splitTextToSize(penerima || "................................", 60);
+            doc.text(splitPenerima, rightColumnX, headerY + 12);
+
+            let penerimaHeight = (splitPenerima.length * 6);
+
+            doc.setFont("times", "normal");
+            doc.text("di -", rightColumnX, headerY + 12 + penerimaHeight);
+            doc.text("    Tempat", rightColumnX + 5, headerY + 18 + penerimaHeight);
+
+            // --- 4. ISI SURAT ---
+            let perihalHeight = splitPerihal.length * 6;
+            let headerBlockHeight = Math.max(perihalHeight, (24 + penerimaHeight));
+            let bodyY = headerY + headerBlockHeight + 10;
+
+            const maxWidth = 170;
+            const indentSpace = "        ";
+
+            function writeParagraph(text) {
+                const indentedText = indentSpace + text;
+                doc.text(indentedText, leftMargin, bodyY, { maxWidth: maxWidth, align: "justify", lineHeightFactor: 1.5 });
+                const lines = doc.splitTextToSize(indentedText, maxWidth);
+                bodyY += (lines.length * 6.5) + 4;
+            }
+
+            doc.text("Dengan Hormat,", leftMargin, bodyY);
+            bodyY += 10;
+
+            writeParagraph(p1Raw);
+            writeParagraph(p2Raw);
+            writeParagraph(p3Raw);
+
+            bodyY += 5;
+
+            // --- 5. TANDA TANGAN (AUTO GAMBAR) ---
+            if (bodyY > 240) { doc.addPage(); bodyY = 20; }
+
+            // Jabatan
+            doc.text("Sekretaris", 55, bodyY, { align: "center" });
+            doc.text("STT Dwi Dharma Tunggal", 55, bodyY + 5, { align: "center" });
+            doc.text("Ketua", 150, bodyY, { align: "center" });
+            doc.text("STT Dwi Dharma Tunggal", 150, bodyY + 5, { align: "center" });
+
+            // --- LOAD GAMBAR TANDA TANGAN ---
+
+            // 1. TTD Sekretaris
+            const imgSek = document.getElementById('ttd_sekre');
+            if (imgSek && imgSek.naturalWidth > 0) {
+                // Koordinat Tengah Kiri adalah 40. Gambar lebar 30mm. X = 40 - 15 = 25.
+                doc.addImage(imgSek, 'PNG', 40, bodyY + 8, 30, 20);
+            }
+
+            // 2. TTD Ketua
+            const imgKet = document.getElementById('ttdKetua');
+            if (imgKet && imgKet.naturalWidth > 0) {
+                // Koordinat Tengah Kanan adalah 150. Gambar lebar 30mm. X = 150 - 15 = 135.
+                doc.addImage(imgKet, 'PNG', 135, bodyY + 7, 30, 20);
+            }
+
+            bodyY += 35; // Beri ruang untuk tanda tangan (Jarak antara Jabatan dan Nama)
+
+            // Nama Pejabat
+            doc.setFont("times", "bold");
+            doc.text("I Dewa Made Mardana", 55, bodyY, { align: "center" });
+            doc.text("I Dewa Made Gita Suryawan", 150, bodyY, { align: "center" });
+
+            doc.save(`Surat_STT_${nomor.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`);
+        }
+    </script>
+
+</body>
+
+</html>
