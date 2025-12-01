@@ -213,23 +213,23 @@
             doc.text(splitPerihal, leftMargin + 25, headerY + 12);
 
             const rightColumnX = 130;
-            doc.text("Kepada", rightColumnX, headerY);
-            doc.text("Yth.", rightColumnX, headerY + 6);
+            doc.text("Kepada Yth.", rightColumnX, headerY);
+            // doc.text("Yth.", rightColumnX, headerY + 6);
 
             doc.setFont("times", "bold");
             const splitPenerima = doc.splitTextToSize(penerima || "................................", 60);
-            doc.text(splitPenerima, rightColumnX, headerY + 12);
+            doc.text(splitPenerima, rightColumnX, headerY + 6);
 
             let penerimaHeight = (splitPenerima.length * 6);
 
             doc.setFont("times", "normal");
-            doc.text("di -", rightColumnX, headerY + 12 + penerimaHeight);
-            doc.text("    Tempat", rightColumnX + 5, headerY + 18 + penerimaHeight);
+            doc.text("di -", rightColumnX, headerY + 6 + penerimaHeight);
+            doc.text("    Tempat", rightColumnX + 5, headerY + 12 + penerimaHeight);
 
             // --- 4. ISI SURAT ---
             let perihalHeight = splitPerihal.length * 6;
             let headerBlockHeight = Math.max(perihalHeight, (24 + penerimaHeight));
-            let bodyY = headerY + headerBlockHeight + 10;
+            let bodyY = headerY + headerBlockHeight + 4;
 
             const maxWidth = 170;
             // const indentSpace = "        ";
